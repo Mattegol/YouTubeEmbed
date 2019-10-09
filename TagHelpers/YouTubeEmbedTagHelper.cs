@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Razor.TagHelpers;
-using System.Text;
 using YouTubeEmbed.Models;
 using YouTubeEmbed.Services;
 
@@ -23,19 +22,22 @@ namespace YouTubeEmbed.TagHelpers
             output.TagName = "div";
 
             _scriptManager.AddScript(
-                new ScriptReference("/lib/jquery/dist/jquery.js", 1000));
+                new ScriptReference("https://code.jquery.com/jquery-1.10.2.min.js", 1000));
+
+            _scriptManager.AddScript(
+                new ScriptReference("/lib/bootstrap/dist/js/bootstrap.bundle.js", 1000));
 
             _scriptManager.AddScript(
                 new ScriptReference("/lib/non-sucky-youtube-embed/jquery.nonSuckyYouTubeEmbed.js", 1000));
 
             output.Attributes.Add(new TagHelperAttribute("youtubeid", YouTubeId));
             output.Attributes.Add(new TagHelperAttribute("class", "nsyte"));
-            
-            var scriptTextExecute = @"
-                  <script>$(document).ready(function () {
+
+            var scriptTextExecute = string.Format(@"
+                 $(document).ready(function () {{
                         $('.nsyte').nonSuckyYouTubeEmbed();
-                });</script>
-            ";
+                }});
+            ");
 
             _scriptManager.AddScriptText(scriptTextExecute);
 
