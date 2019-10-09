@@ -14,10 +14,10 @@ namespace YouTubeEmbed.TagHelpers
             output.TagName = "";
             var sb = new StringBuilder();
             sb.Append(@"
-                    <script src='https://code.jquery.com/jquery-1.10.2.min.js'></script>
+                    <script src='/lib/jquery/dist/jquery.js'></script>
                 ");
             sb.Append(@"
-                    <script src='/js/jquery.nonSuckyYouTubeEmbed.js'></script>
+                    <script src='/lib/non-sucky-youtube-embed/jquery.nonSuckyYouTubeEmbed.js'></script>
                 ");
             sb.AppendFormat("<div class=\"nsyte\" youtubeid=\"{0}\"></div>", YouTubeId);
             var scriptTextExecute = string.Format(@"
