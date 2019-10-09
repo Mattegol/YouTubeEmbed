@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Razor.TagHelpers;
 using System.Text;
+using YouTubeEmbed.Models;
+using YouTubeEmbed.Services;
 
 namespace YouTubeEmbed.TagHelpers
 {
@@ -7,26 +9,36 @@ namespace YouTubeEmbed.TagHelpers
     [HtmlTargetElement("YouTubeEmbed")]
     public class YouTubeEmbedTagHelper : TagHelper
     {
+        private readonly IScriptManager _scriptManager;
+
+        public YouTubeEmbedTagHelper(IScriptManager scriptManager)
+        {
+            _scriptManager = scriptManager;
+        }
+
         public string YouTubeId { get; set; }    
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            output.TagName = "";
-            var sb = new StringBuilder();
-            sb.Append(@"
-                    <script src='/lib/jquery/dist/jquery.js'></script>
-                ");
-            sb.Append(@"
-                    <script src='/lib/non-sucky-youtube-embed/jquery.nonSuckyYouTubeEmbed.js'></script>
-                ");
-            sb.AppendFormat("<div class=\"nsyte\" youtubeid=\"{0}\"></div>", YouTubeId);
-            var scriptTextExecute = string.Format(@"
-                  <script>$(document).ready(function () {{
+            output.TagName = "div";
+
+            _scriptManager.AddScript(
+                new ScriptReference("/lib/jquery/dist/jquery.js", 1000));
+
+            _scriptManager.AddScript(
+                new ScriptReference("/lib/non-sucky-youtube-embed/jquery.nonSuckyYouTubeEmbed.js", 1000));
+
+            output.Attributes.Add(new TagHelperAttribute("youtubeid", YouTubeId));
+            output.Attributes.Add(new TagHelperAttribute("class", "nsyte"));
+            
+            var scriptTextExecute = @"
+                  <script>$(document).ready(function () {
                         $('.nsyte').nonSuckyYouTubeEmbed();
-                }});</script>
-            ");
-            sb.Append(scriptTextExecute);
-            output.PostContent.AppendHtml(sb.ToString());
+                });</script>
+            ";
+
+            _scriptManager.AddScriptText(scriptTextExecute);
+
         }
     }
 }
