@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using YouTubeEmbed.Models;
+using YouTubeEmbed.Services;
 
 namespace YouTubeEmbed
 {
@@ -23,6 +25,8 @@ namespace YouTubeEmbed
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddSingleton<IScriptManager>(new ScriptManager());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
